@@ -13,9 +13,14 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow();  
+    void DisplayImage(Ui::MainWindow *ui, char *image, int size);
+
+public slots:
+    void ReceiveImage(char image[], int size);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow  *ui;
+    QObject          m_object;
 };
 #endif // MAINWINDOW_H

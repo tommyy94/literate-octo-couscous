@@ -20,10 +20,14 @@ QMAKE_CFLAGS_DEBUG += -g3
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    videothread.cpp \
+    wireless.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    videothread.h \
+    wireless.h
 
 FORMS += \
     mainwindow.ui
