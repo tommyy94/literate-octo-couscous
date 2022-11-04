@@ -21,9 +21,11 @@ QMAKE_CFLAGS_DEBUG += -g3
 SOURCES += \
     main.cpp \
     mainwindow.cpp
+    videothread.cpp \
 
 HEADERS += \
     mainwindow.h
+    videothread.h \
 
 FORMS += \
     mainwindow.ui
