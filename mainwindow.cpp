@@ -3,7 +3,7 @@
 #include "qpixmap.h"
 
 
-extern char imageData[];
+extern Wireless wl;
 extern char jpgData[];
 
 
@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     QPixmap *pm = new QPixmap();
 
-    //QByteArray imgBytes(imageData, 11913);
+    QByteArray imgBytes(img, size);
     QByteArray imgBytes(jpgData, 5447);
 
     bool isLoaded = pm->loadFromData(imgBytes, "JPEG");

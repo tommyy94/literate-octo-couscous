@@ -19,8 +19,6 @@ QMAKE_CFLAGS_DEBUG += -g3
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    image.cpp \
-    jpg.cpp \
     main.cpp \
     mainwindow.cpp
 
