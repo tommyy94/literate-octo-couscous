@@ -22,10 +22,12 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp
     videothread.cpp \
+    wireless.cpp
 
 HEADERS += \
     mainwindow.h
     videothread.h \
+    wireless.h
 
 FORMS += \
     mainwindow.ui
