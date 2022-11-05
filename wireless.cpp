@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <QDebug>
+#include "radioframe.h"
 
 
 #define WIFI_M2M_SERVER_IP        0xC0A80132    // 192.168.1.50
@@ -70,34 +71,30 @@ void Wireless::Receive(void)
     int32_t             len;
     uint32_t            idx;
     uint32_t            bytesRecv;
+    RadioFrame_t        frame;
 
-    /*
+    /* Serialize the struct we build */
+    char               *frameHdrPtr = (char *)&frame;
+
     idx = 0;
     len = 5447;
     while (len > 0)
     {
-        bytesRecv = recvfrom(sockfd, &remoteJpg[idx], len, 0, NULL, NULL);
-        qDebug() << "recvfrom() " << bytesRecv << " bytes received";
-        len -= bytesRecv;
-        idx += bytesRecv;
-    }
-    */
+        qDebug() << "len = " << len;
 
-    int cnt = 4;
-    idx = 0;
-    len = 5447;
-    while (cnt > 0)
-    {
-        bytesRecv = recvfrom(sockfd, &remoteJpg[idx], len, 0, NULL, NULL);
-        qDebug() << "recvfrom() " << bytesRecv << " bytes received";
-        len -= bytesRecv;
-        idx += bytesRecv;
+        bytesRecv = recvfrom(sockfd, frameHdrPtr, WINC3400_BUFFER_SIZE, 0, NULL, NULL);
+        DecodeRadioFrame(&frame, &remoteJpg[idx]);
 
-        cnt--;
+        qDebug() << "recvfrom() " << bytesRecv << " bytes received";
+
+        /* Ignore header */
+        bytesRecv -= RADIO_FRAME_HEADER_SIZE;
+
+        idx += bytesRecv;
+        len -= bytesRecv;
     }
 
-
+    qDebug() << "len @ end = " << len;
 
     emit TransmitImageToGUI(remoteJpg, 5447);
 }
-
