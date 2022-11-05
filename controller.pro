@@ -21,11 +21,13 @@ QMAKE_CFLAGS_DEBUG += -g3
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    radioframe.cpp \
     videothread.cpp \
     wireless.cpp
 
 HEADERS += \
     mainwindow.h \
+    radioframe.h \
     videothread.h \
     wireless.h
 
