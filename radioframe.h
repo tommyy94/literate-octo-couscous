@@ -13,8 +13,7 @@ typedef struct
     /* Header */
     uint32_t  length;
     uint8_t   sequenceId;
-    uint8_t   uniqueId;
-    uint8_t   padding;
+    uint8_t   padding[2];
 
     /* Payload */
     char      data[RADIO_FRAME_PAYLOAD_SIZE];
