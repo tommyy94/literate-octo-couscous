@@ -78,11 +78,9 @@ void Wireless::Init(void)
 
 void Wireless::Receive(void)
 {
-    int32_t         len;
-    int32_t         bytesRecv;
-    RadioFrame_t    frame;
-    uint8_t         uniqId         = 0;
-    bool            uniqIdReceived = false;
+    static RadioFrame_t frame;
+    int32_t             len;
+    int32_t             bytesRecv;
 
     /* Serialize the struct we build */
     char               *frameHdrPtr = (char *)&frame;
@@ -92,15 +90,12 @@ void Wireless::Receive(void)
     {
         bytesRecv = recvfrom(sockfd, frameHdrPtr, WINC3400_BUFFER_SIZE, 0, NULL, NULL);
         if (bytesRecv < 0)
-
-        if (uniqIdReceived == false)
         {
             qDebug() << "recvfrom() error " << bytesRecv;
-            uniqId         = frame.uniqueId;
         }
-        if (uniqId != frame.uniqueId)
+        else
         {
-            qDebug() << "Invalid unique ID\r\n\tReceived: " << frame.uniqueId << "\r\n\tExpected: " << uniqId;
+            DecodeRadioFrame(&frame, &remoteJpg[frame.sequenceId * RADIO_FRAME_PAYLOAD_SIZE]);
         }
 
         qDebug() << "recvfrom() " << bytesRecv << " bytes received";
