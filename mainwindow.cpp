@@ -51,6 +51,8 @@ void MainWindow::DisplayImage(Ui::MainWindow    *ui,
     {
         qDebug() << "Image not loaded";
     }
+
+    delete pm;
 }
 
 
