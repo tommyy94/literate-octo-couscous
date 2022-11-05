@@ -43,11 +43,21 @@ Wireless::~Wireless()
 
 void Wireless::Init(void)
 {
+    struct timeval tv;
+
     /* Creating socket file descriptor */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
     {
         perror("Wireless_Init: socket creation failed\r\n");
+        exit(EXIT_FAILURE);
+    }
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 300000;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0)
+    {
+        perror("Wireless_Init: setsockopt failed\r\n");
         exit(EXIT_FAILURE);
     }
 
@@ -69,7 +79,7 @@ void Wireless::Init(void)
 void Wireless::Receive(void)
 {
     int32_t         len;
-    uint32_t        bytesRecv;
+    int32_t         bytesRecv;
     RadioFrame_t    frame;
     uint8_t         uniqId         = 0;
     bool            uniqIdReceived = false;
@@ -81,11 +91,11 @@ void Wireless::Receive(void)
     while (len > 0)
     {
         bytesRecv = recvfrom(sockfd, frameHdrPtr, WINC3400_BUFFER_SIZE, 0, NULL, NULL);
-        DecodeRadioFrame(&frame, &remoteJpg[frame.sequenceId * RADIO_FRAME_PAYLOAD_SIZE]);
+        if (bytesRecv < 0)
 
         if (uniqIdReceived == false)
         {
-            uniqIdReceived = true;
+            qDebug() << "recvfrom() error " << bytesRecv;
             uniqId         = frame.uniqueId;
         }
         if (uniqId != frame.uniqueId)
