@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <QDebug>
-#include "radioframe.h"
+#include "radiopacket.h"
 
 
 #define WIFI_M2M_SERVER_IP        0xC0A80132    // 192.168.1.50
@@ -78,30 +78,30 @@ void Wireless::Init(void)
 
 void Wireless::Receive(void)
 {
-    static RadioFrame_t frame;
-    int32_t             len;
-    int32_t             bytesRecv;
+    static RadioPacket_t packet;
+    int32_t              len;
+    int32_t              bytesRecv;
 
     /* Serialize the struct we build */
-    char               *frameHdrPtr = (char *)&frame;
+    char               *packetHdrPtr = (char *)&packet;
 
     len = 5447;
     while (len > 0)
     {
-        bytesRecv = recvfrom(sockfd, frameHdrPtr, WINC3400_BUFFER_SIZE, 0, NULL, NULL);
+        bytesRecv = recvfrom(sockfd, packetHdrPtr, WINC3400_BUFFER_SIZE, 0, NULL, NULL);
         if (bytesRecv < 0)
         {
             qDebug() << "recvfrom() error " << bytesRecv;
         }
         else
         {
-            DecodeRadioFrame(&frame, &remoteJpg[frame.sequenceId * RADIO_FRAME_PAYLOAD_SIZE]);
+            DecodeRadioPacket(&packet, &remoteJpg[packet.sequenceId * RADIOPACKET_PAYLOAD_SIZE]);
         }
 
         qDebug() << "recvfrom() " << bytesRecv << " bytes received";
 
         /* Ignore header */
-        bytesRecv -= RADIO_FRAME_HEADER_SIZE;
+        bytesRecv -= RADIOPACKET_HEADER_SIZE;
 
         len -= bytesRecv;
     }
